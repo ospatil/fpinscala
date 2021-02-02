@@ -15,7 +15,7 @@ object List:
 
   def product(ds: List[Double]): Double = ds match
     case Nil => 1.0
-    case Cons(0.0, _) => 0.0 
+    case Cons(0.0, _) => 0.0
     case Cons(x, xs) => x * product(xs)
 
   def apply[A](as: A*): List[A] =
@@ -37,7 +37,7 @@ val x = List(1, 2, 3, 4, 5) match
 def tail[A](l: List[A]): List[A] = l match
   case Nil => sys.error("tail of empty list")
   case Cons(_, t) => t
-  
+
 // Exercise 3.3
 def setHead[A](l: List[A], h: A): List[A]= l match
   case Nil => Cons(h, Nil)
@@ -66,4 +66,3 @@ def init[A](l: List[A]): List[A] = l match
   case Nil => sys.error("init of empty list")
   case Cons(_, Nil) => Nil
   case Cons(h, t) => Cons(h, init(t))
-  
