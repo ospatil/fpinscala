@@ -78,9 +78,10 @@ def product(ds: List[Double]): Double = ds match
 
 /*
  * Generalizing recursion over lists
- * z is the accumulator and the type B shows that it can be different
- * from list elements
- * f denotes the action to be carried out recursively
+ * z is the init value of the accumulator and the type B shows that it can be different
+ * from list elements.
+ * f denotes the action to be carried out recursively. The arguments are list element A
+ * and accumulator B.
 */
 def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B = as match
     case Nil => z
@@ -92,3 +93,40 @@ def sum2(as: List[Int]) =
 
 def product2(as: List[Double]) =
     foldRight(as, 1.0)(_ * _)
+
+// Exercise 3.7
+// It's not possible since foldRight has to traverse the whole list before it
+// starts applying our function.
+
+// Exercise 3.8
+val lst = foldRight(List(1,2,3), Nil:List[Int])(Cons(_,_))
+// lst will be the original list. So basically z (init) is Nil data
+// constructor while f is Cons.
+
+// Exercise 3.9
+def length[A](as: List[A]): Int =
+    foldRight(as, 0)((_, acc) => acc + 1)
+
+// Exercise 3.10
+// Part 1 - Convince yourself foldRight is not tail-recursive - check
+// out the foldRightNonTailRecursiveTest testcase in Chapter3Tests
+
+// Part2
+@annotation.tailrec
+def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = as match
+    case Nil => z
+    case Cons(h, t) => foldLeft(t, f(z, h))(f)
+
+// Exercise 3.11
+def sum3(as: List[Int]): Int =
+    foldLeft(as, 0)(_ + _)
+
+def product3(as: List[Int]): Int =
+    foldLeft(as, 1)(_ * _)
+
+def length2(as: List[Int]): Int =
+    foldLeft(as, 0)((acc, h) => acc + 1)
+
+// Exercise 3.12
+def reverse[A](l: List[A]): List[A] =
+    foldLeft(l, List[A]())((acc, h) => Cons(h, acc))

@@ -39,3 +39,24 @@ class Chapter3Tests:
 
     @Test def product2Test() =
         assertEquals(6.0, product2(List(1.0, 2.0, 3.0)), 0.5) // 0.5 is delta required for float and double comparisons
+    @Test def lengthTest() =
+        assertEquals(3, length(List(1, 2, 3)))
+        assertEquals(0, length(Nil))
+
+    @Test(expected = classOf[StackOverflowError]) def foldRightNonTailRecursiveTest(): Unit =
+        val l = collection.immutable.List.range(0, 10_000)
+        val lc = List.apply(l: _*) // splat the scala list into our list
+        length(lc) // This will cause stack overflow since foldRight is not tail-recursive
+
+    @Test def sum3Test() =
+        assertEquals(6, sum3(List(1, 2, 3)))
+
+    @Test def product3Test() =
+        assertEquals(6, product3(List(1, 2, 3)))
+
+    @Test def length2Test() =
+        assertEquals(3, length2(List(1, 2, 3)))
+        assertEquals(0, length2(Nil))
+
+    @Test def reverseTest() =
+        assertEquals(List(3, 2, 1), reverse(List(1, 2, 3)))
