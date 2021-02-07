@@ -84,8 +84,12 @@ def product(ds: List[Double]): Double = ds match
  * and accumulator B.
 */
 def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B = as match
-    case Nil => z
-    case Cons(x, xs) => f(x, foldRight(xs, z)(f))
+    case Nil =>
+//        println(s"foldRight case Nil => $z")  
+        z
+    case Cons(h, t) =>
+//        println(s"foldRight case Cons(h, t) => h = $h, t = $t")  
+        f(h, foldRight(t, z)(f))
 
 // Let's write sum and product using foldRight
 def sum2(as: List[Int]) =
@@ -99,9 +103,9 @@ def product2(as: List[Double]) =
 // starts applying our function.
 
 // Exercise 3.8
-val lst = foldRight(List(1,2,3), Nil:List[Int])(Cons(_,_))
+//val lst = foldRight(List(1,2,3), Nil:List[Int])(Cons(_,_))
 // lst will be the original list. So basically z (init) is Nil data
-// constructor while f is Cons.
+// constructor while f (operator) is Cons.
 
 // Exercise 3.9
 def length[A](as: List[A]): Int =
@@ -114,8 +118,12 @@ def length[A](as: List[A]): Int =
 // Part2
 @annotation.tailrec
 def foldLeft[A, B](as: List[A], z: B)(f: (B, A) => B): B = as match
-    case Nil => z
-    case Cons(h, t) => foldLeft(t, f(z, h))(f)
+    case Nil =>
+//        println(s"foldLeft case Nil => $z")
+        z
+    case Cons(h, t) =>
+//        println(s"foldLeft case Cons(h, t) => h = $h, t = $t")
+        foldLeft(t, f(z, h))(f)
 
 // Exercise 3.11
 def sum3(as: List[Int]): Int =
@@ -130,3 +138,60 @@ def length2(as: List[Int]): Int =
 // Exercise 3.12
 def reverse[A](l: List[A]): List[A] =
     foldLeft(l, List[A]())((acc, h) => Cons(h, acc))
+
+/*
+Tracing foldRight for clearer understanding
+println(traverse(List(1, 2, 3))) // which is same as foldRight(List(1,2,3), Nil:List[Int])(Cons(_,_)) in 3.8
+
+input: Cons(1,Cons(2,Cons(3,Nil)))
+foldRight case Cons(h, t) => h = 1, t = Cons(2,Cons(3,Nil))
+foldRight case Cons(h, t) => h = 2, t = Cons(3,Nil)
+foldRight case Cons(h, t) => h = 3, t = Nil
+foldRight case Nil => Nil
+operator i/p: h = 3, acc = Nil
+operator o/p: Cons(3,Nil)
+operator i/p: h = 2, acc = Cons(3,Nil)
+operator o/p: Cons(2,Cons(3,Nil))
+operator i/p: h = 1, acc = Cons(2,Cons(3,Nil))
+operator o/p: Cons(1,Cons(2,Cons(3,Nil)))
+output: Cons(1,Cons(2,Cons(3,Nil)))
+ */
+def traverse[A](l: List[A]): List[A] =
+    println(s"input: $l")
+    def fn(h: A, acc:List[A]) =
+        println(s"operator i/p: h = $h, acc = $acc")
+        val ret = Cons(h, acc)
+        println(s"operator o/p: $ret")
+        ret
+    foldRight(l, List.Nil: List[A])(fn)
+
+/*
+    Tracing foldLeft for clearer understanding
+    println(rev(List(1, 2, 3))) // rev is same as reverse in 3.12 with logs added
+    
+    input: Cons(1,Cons(2,Cons(3,Nil)))
+    foldLeft case Cons(h, t) => h = 1, t = Cons(2,Cons(3,Nil))
+    operator i/p: acc = Nil, h = 1
+    operator o/p: Cons(1,Nil)
+    foldLeft case Cons(h, t) => h = 2, t = Cons(3,Nil)
+    operator i/p: acc = Cons(1,Nil), h = 2
+    operator o/p: Cons(2,Cons(1,Nil))
+    foldLeft case Cons(h, t) => h = 3, t = Nil
+    operator i/p: acc = Cons(2,Cons(1,Nil)), h = 3
+    operator o/p: Cons(3,Cons(2,Cons(1,Nil)))
+    foldLeft case Nil => Cons(3,Cons(2,Cons(1,Nil)))
+    output: Cons(3,Cons(2,Cons(1,Nil)))
+*/
+def rev[A](l: List[A]): List[A] =
+    println(s"input = $l")
+    def fn(acc: List[A], h: A) =
+        println(s"operator i/p: acc = $acc, h = $h")
+        val ret = Cons(h, acc)
+        println(s"operator o/p: $ret")
+        ret
+    foldLeft(l, List[A]())(fn)
+
+// Exercise 3.13
+def foldRightAsLeft[A, B](l: List[A], z: B)(f: (A, B) => B): B = l match
+    case Nil => z
+    case Cons(h, t) => f(h, foldRightAsLeft(t, z)(f))
