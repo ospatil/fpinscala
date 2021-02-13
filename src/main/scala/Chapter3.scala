@@ -192,6 +192,18 @@ def rev[A](l: List[A]): List[A] =
     foldLeft(l, List[A]())(fn)
 
 // Exercise 3.13
-def foldRightAsLeft[A, B](l: List[A], z: B)(f: (A, B) => B): B = l match
-    case Nil => z
-    case Cons(h, t) => f(h, foldRightAsLeft(t, z)(f))
+def foldRightViaLeft[A, B](l: List[A], z: B)(f: (A, B) => B): B =
+    foldLeft(reverse(l), z)((b, a) => f(a, b))
+// for foldRightViaLeft without reverse and foldLeftViaRight, it's quite
+// involved and the fpinscala github has elaborate solution - 
+// https://github.com/fpinscala/fpinscala/blob/master/answerkey/datastructures/13.answer.scala
+    
+// Exercise 3.14
+def appendViaFoldRight[A](l1: List[A], l2: List[A]): List[A] =
+//    foldRight(l1, l2)((acc, h) => Cons(acc, h))
+// with short anonymous function
+    foldRight(l1, l2)(Cons(_, _))
+
+// Exercise 3.15
+def concat[A](l: List[List[A]]): List[A] =
+    foldRight(l, Nil: List[A])(appendViaFoldRight)

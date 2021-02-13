@@ -60,3 +60,9 @@ class Chapter3Tests:
 
     @Test def reverseTest() =
         assertEquals(List(3, 2, 1), reverse(List(1, 2, 3)))
+  
+    @Test def appendViaFoldRightTest() =
+        assertEquals(List(1, 2, 3, 4, 5), appendViaFoldRight(List(1, 2, 3), List(4, 5)))
+
+//    @Test def addOneTest() =
+//        assertEquals(List(2, 3, 4), addOne(List(1, 2, 3)))
