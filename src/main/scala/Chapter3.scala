@@ -62,6 +62,7 @@ def append[A](a1: List[A], a2: List[A]): List[A] = a1 match
     case Nil => a2
     case Cons(h,t) => Cons(h, append(t, a2))
 
+// Exercise 3.6
 def init[A](l: List[A]): List[A] = l match
     case Nil => sys.error("init of empty list")
     case Cons(_, Nil) => Nil
@@ -85,10 +86,10 @@ def product(ds: List[Double]): Double = ds match
 */
 def foldRight[A, B](as: List[A], z: B)(f: (A, B) => B): B = as match
     case Nil =>
-//        println(s"foldRight case Nil => $z")  
+//        println(s"foldRight case Nil => $z")
         z
     case Cons(h, t) =>
-//        println(s"foldRight case Cons(h, t) => h = $h, t = $t")  
+//        println(s"foldRight case Cons(h, t) => h = $h, t = $t")
         f(h, foldRight(t, z)(f))
 
 // Let's write sum and product using foldRight
@@ -168,7 +169,7 @@ def traverse[A](l: List[A]): List[A] =
 /*
     Tracing foldLeft for clearer understanding
     println(rev(List(1, 2, 3))) // rev is same as reverse in 3.12 with logs added
-    
+
     input: Cons(1,Cons(2,Cons(3,Nil)))
     foldLeft case Cons(h, t) => h = 1, t = Cons(2,Cons(3,Nil))
     operator i/p: acc = Nil, h = 1
@@ -195,15 +196,38 @@ def rev[A](l: List[A]): List[A] =
 def foldRightViaLeft[A, B](l: List[A], z: B)(f: (A, B) => B): B =
     foldLeft(reverse(l), z)((b, a) => f(a, b))
 // for foldRightViaLeft without reverse and foldLeftViaRight, it's quite
-// involved and the fpinscala github has elaborate solution - 
+// involved and the fpinscala github has elaborate solution -
 // https://github.com/fpinscala/fpinscala/blob/master/answerkey/datastructures/13.answer.scala
-    
+
 // Exercise 3.14
 def appendViaFoldRight[A](l1: List[A], l2: List[A]): List[A] =
-//    foldRight(l1, l2)((acc, h) => Cons(acc, h))
 // with short anonymous function
     foldRight(l1, l2)(Cons(_, _))
 
 // Exercise 3.15
 def concat[A](l: List[List[A]]): List[A] =
     foldRight(l, Nil: List[A])(appendViaFoldRight)
+    
+// Exercise 3.16
+def addOne(l: List[Int]): List[Int] =
+    foldRight(l, Nil: List[Int])((h, t) => Cons(h + 1, t))
+
+// Exercise 3.17
+def doubleToString(l: List[Double]): List[String] =
+    foldRight(l, Nil: List[String])((h, t) => Cons(h.toString, t))
+
+// Exercise 3.18
+def map[A, B](as: List[A])(f: A => B): List[B] =
+    foldRight(as, Nil: List[B])((h, t) => Cons(f(h), t))
+    
+// Exercise 3.19
+def filter[A](as: List[A])(f: A => Boolean): List[A] =
+    foldRight(as, Nil: List[A])((h, t) => if f(h) then Cons(h, t) else t)
+
+// Exercise 3.20
+def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] =
+    foldRight(as, Nil: List[B])((h, t) => appendViaFoldRight(f(h), t))
+
+// Exercise 3.21
+def filterViaFlatMap[A](l: List[A])(f: A => Boolean): List[A] =
+    flatMap(l)(e => if f(e) then List(e) else Nil)

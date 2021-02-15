@@ -64,5 +64,23 @@ class Chapter3Tests:
     @Test def appendViaFoldRightTest() =
         assertEquals(List(1, 2, 3, 4, 5), appendViaFoldRight(List(1, 2, 3), List(4, 5)))
 
-//    @Test def addOneTest() =
-//        assertEquals(List(2, 3, 4), addOne(List(1, 2, 3)))
+    @Test def addOneTest() =
+        assertEquals(List(2, 3, 4), addOne(List(1, 2, 3)))
+
+    @Test def doubleToStringTest() =
+        assertEquals(List("1.0", "2.0", "3.0"), doubleToString(List(1.0, 2.0, 3.0)))
+
+    @Test def mapTest() =
+        assertEquals(List(2, 3, 4), map(List(1, 2, 3))(x => x + 1))
+        assertEquals(List("1", "2", "3"), map(List(1, 2, 3))(x => x.toString))
+
+    @Test def filterTest() =
+        assertEquals(List(2, 4, 6), filter(List(1, 2, 3, 4, 5, 6))(x => x % 2 == 0))
+        assertEquals(List("a", "c", "d"), filter(List("a", "b", "c", "d"))(x => x != "b"))
+
+    @Test def flatMapTest() =
+        assertEquals(List(1, 1, 2, 2, 3, 3), flatMap(List(1,2,3))(i => List(i,i)))
+
+    @Test def filterViaFlatMapTest() =
+        assertEquals(List(2, 4, 6), filter(List(1, 2, 3, 4, 5, 6))(x => x % 2 == 0))
+        assertEquals(List("a", "c", "d"), filter(List("a", "b", "c", "d"))(x => x != "b"))
