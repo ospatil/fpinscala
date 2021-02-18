@@ -1,6 +1,7 @@
 import org.junit.Test
 import org.junit.Assert._
 import List._
+import Tree._
 
 class Chapter3Tests:
     @Test def tailTest()=
@@ -60,7 +61,7 @@ class Chapter3Tests:
 
     @Test def reverseTest() =
         assertEquals(List(3, 2, 1), reverse(List(1, 2, 3)))
-  
+
     @Test def appendViaFoldRightTest() =
         assertEquals(List(1, 2, 3, 4, 5), appendViaFoldRight(List(1, 2, 3), List(4, 5)))
 
@@ -84,3 +85,25 @@ class Chapter3Tests:
     @Test def filterViaFlatMapTest() =
         assertEquals(List(2, 4, 6), filter(List(1, 2, 3, 4, 5, 6))(x => x % 2 == 0))
         assertEquals(List("a", "c", "d"), filter(List("a", "b", "c", "d"))(x => x != "b"))
+
+    @Test def addPairwiseTest() =
+        assertEquals(List(5, 7, 9), addPairwise(List(1, 2, 3), List(4, 5, 6)))
+        assertEquals(List(6, 8), addPairwise(List(1, 2, 3), List(5, 6)))
+
+    @Test def zipWithTest() =
+        assertEquals(List("ac", "bd", "ce"),
+            zipWith(List("a", "b", "c"), List("c", "d", "e"))(_ + _))
+
+    @Test def hasSubsequenceTest() =
+        assertEquals(true, hasSubsequence(List(1, 2, 3, 4), List(1, 2)))
+        assertEquals(true, hasSubsequence(List(1, 2, 3, 4), List(2, 3)))
+        assertEquals(true, hasSubsequence(List(1, 2, 3, 4), List(4)))
+        assertEquals(false, hasSubsequence(List(1, 2, 3, 4), List(5, 6)))
+        assertEquals(false, hasSubsequence(List(1, 2, 3, 4), List(6)))
+        assertEquals(false, hasSubsequence(List(1, 2, 3, 4), List(4, 5)))
+
+    @Test def sizeTest() =
+        assertEquals(5, size(Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))))
+
+    @Test def maximumTest() =
+        assertEquals(5, maximum(Branch(Branch(Branch(Leaf(1), Leaf(2)), Branch(Leaf(3), Leaf(4))), Leaf(5))))

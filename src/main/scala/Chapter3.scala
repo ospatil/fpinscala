@@ -1,6 +1,6 @@
 // Listing 3.1
 
-// In scala REPL, Nil and Cons data constructors have be accessed as List.Nil and List.Cons
+// In scala REPL, Nil and Cons data constructors have to be accessed as List.Nil and List.Cons
 // Here is what https://docs.scala-lang.org/scala3/book/types-adts-gadts.html says:
 // As with normal enum values, the cases of an enum are defined in the enums companion object, so they’re referred to as Option.Some and Option.None (unless the definitions are “pulled out” with an import):
 // val ex1: List[Double] = List.Nil
@@ -207,7 +207,7 @@ def appendViaFoldRight[A](l1: List[A], l2: List[A]): List[A] =
 // Exercise 3.15
 def concat[A](l: List[List[A]]): List[A] =
     foldRight(l, Nil: List[A])(appendViaFoldRight)
-    
+
 // Exercise 3.16
 def addOne(l: List[Int]): List[Int] =
     foldRight(l, Nil: List[Int])((h, t) => Cons(h + 1, t))
@@ -219,7 +219,7 @@ def doubleToString(l: List[Double]): List[String] =
 // Exercise 3.18
 def map[A, B](as: List[A])(f: A => B): List[B] =
     foldRight(as, Nil: List[B])((h, t) => Cons(f(h), t))
-    
+
 // Exercise 3.19
 def filter[A](as: List[A])(f: A => Boolean): List[A] =
     foldRight(as, Nil: List[A])((h, t) => if f(h) then Cons(h, t) else t)
@@ -231,3 +231,45 @@ def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] =
 // Exercise 3.21
 def filterViaFlatMap[A](l: List[A])(f: A => Boolean): List[A] =
     flatMap(l)(e => if f(e) then List(e) else Nil)
+
+// Exercise 3.22
+def addPairwise(l1: List[Int], l2: List[Int]): List[Int] =
+    (l1, l2) match
+        case (Nil, _) => Nil
+        case (_, Nil) => Nil
+        case (Cons(h1, t1), Cons(h2, t2)) => Cons(h1 + h2, addPairwise(t1, t2))
+
+// Exercise 3.23
+def zipWith[A, B, C](l1: List[A], l2: List[B])(f: (A, B) => C): List[C] =
+    (l1, l2) match
+        case (Nil, _) => Nil
+        case (_, Nil) => Nil
+        case (Cons(h1, t1), Cons(h2, t2)) => Cons(f(h1, h2), zipWith(t1, t2)(f))
+
+// Exercise 3.24
+@annotation.tailrec
+def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean =
+    (sup, sub) match
+        case (Nil, _) => false  // if we exhaust sup list, the sequence not present
+        case (_, Nil) => true  // if sup list has elements and sub list exhausted, the sequence is present
+        case (Cons(h1, _), Cons(h2, Nil)) if h1 == h2 => true  // case where sub list is only one element
+        case(Cons(h1, t1), Cons(h2, t2)) if h1 == h2 => hasSubsequence(t1, t2)  // if heads match, continue with the tail
+        case(Cons(_, t), _) => hasSubsequence(t, sub)  // else continue with next element of sup list and original sub list
+
+
+// Section 3.5 Trees
+enum Tree[+A]:
+    case Leaf (value: A)
+    case Branch(left: Tree[A], right: Tree[A])
+
+import Tree._
+
+// Exercise 3.25
+def size[A](t: Tree[A]): Int = t match
+    case Leaf(_) => 1
+    case Branch(l, r) => 1 + size(l) + size(r)
+
+// Exercise 3.26
+def maximum(t: Tree[Int]): Int = t match
+    case Leaf(n) => n
+    case Branch(l, r) => maximum(l) max maximum(r)
