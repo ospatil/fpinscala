@@ -107,3 +107,25 @@ class Chapter3Tests:
 
     @Test def maximumTest() =
         assertEquals(5, maximum(Branch(Branch(Branch(Leaf(1), Leaf(2)), Branch(Leaf(3), Leaf(4))), Leaf(5))))
+
+    @Test def depthTest() =
+        assertEquals(2, depth(Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))))
+
+    @Test def mapTreeTest() =
+        val t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))
+        val xt = Branch(Branch(Leaf(2), Leaf(3)), Leaf(4))
+        assertEquals(xt, map(t)(_ + 1))
+
+    @Test def sizeViaFoldTest() =
+        assertEquals(5, size(Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))))
+
+    @Test def maximumViaFoldTest() =
+        assertEquals(5, maximum(Branch(Branch(Branch(Leaf(1), Leaf(2)), Branch(Leaf(3), Leaf(4))), Leaf(5))))
+
+    @Test def depthViaFoldTest() =
+        assertEquals(2, depth(Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))))
+
+    @Test def mapViaFoldTest() =
+        val t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))
+        val xt = Branch(Branch(Leaf(2), Leaf(3)), Leaf(4))
+        assertEquals(xt, map(t)(_ + 1))

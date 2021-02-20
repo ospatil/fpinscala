@@ -273,3 +273,30 @@ def size[A](t: Tree[A]): Int = t match
 def maximum(t: Tree[Int]): Int = t match
     case Leaf(n) => n
     case Branch(l, r) => maximum(l) max maximum(r)
+
+// Exercise 3.27
+def depth[A](t: Tree[A]): Int = t match
+    case Leaf(_) => 0
+    case Branch(l, r) => 1 + (depth(l) max depth(r))
+
+// Exercise 3.28
+def map[A, B](t: Tree[A])(f: A => B): Tree[B] = t match
+    case Leaf(n) => Leaf(f(n))
+    case Branch(l, r) => Branch(map(l)(f), map(r)(f))
+
+// Exercise 3.29
+def fold[A, B](t: Tree[A])(f: A => B)(g: (B, B) => B): B = t match
+    case Leaf(n) => f(n)
+    case Branch(l , r) => g(fold(l)(f)(g), fold(r)(f)(g))
+
+def sizeViaFold[A](t: Tree[A]): Int =
+    fold(t)(_ => 1)(1 + _ + _)
+
+def maximumViaFold(t: Tree[Int]): Int =
+    fold(t)(n => n)(_ max _)
+
+def depthViaFold[A](t: Tree[A]): Int =
+    fold(t)(_ => 0)(_ max _)
+
+def mapViaFold[A, B](t: Tree[A])(f: A => B): Tree[B] =
+    fold(t)(n => Leaf(f(n)))(Branch(_, _))
